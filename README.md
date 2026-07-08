@@ -84,7 +84,6 @@ The dataset is clinical video from a single institution and cannot be shared pub
 ├── figures/                # the thesis's actual figures (heatmap, convergence curves, efficiency plots)
 ├── data.yaml                # schema/class-name reference (paths genericized, no data included)
 ├── requirements.txt
-└── LICENSE
 ```
 
 ## Installation
