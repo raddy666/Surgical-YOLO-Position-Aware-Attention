@@ -1,0 +1,8 @@
+# YOLO Dataset Configuration
+path: E:/research/train_YOLO/
+train: images/train
+val: images/val
+
+# Classes
+nc: 6  # number of classes
+names: ['IntervertebralDisc', 'Skeleton', 'Ligament', 'Muscle', 'Nerve', 'IntervertebralDiscHerniation']  # class names
