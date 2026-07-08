@@ -42,4 +42,4 @@ tasks.py and modules/__init__.py in this folder are modified copies of
 Ultralytics' own AGPL-3.0-licensed source, included under those terms (AGPL
 header preserved in both). Everything else in this repository — the
 attention implementations in modules/attention/, training scripts, and
-results — is original work, licensed separately (see the top-level LICENSE).
+results — is original work.
