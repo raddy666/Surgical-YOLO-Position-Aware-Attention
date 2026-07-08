@@ -83,7 +83,7 @@ The dataset is clinical video from a single institution and cannot be shared pub
 ├── results/                # aggregated per-seed CSVs, statistical summaries, comparison spreadsheets
 ├── figures/                # the thesis's actual figures (heatmap, convergence curves, efficiency plots)
 ├── data.yaml                # schema/class-name reference (paths genericized, no data included)
-├── requirements.txt
+└── requirements.txt
 ```
 
 ## Installation
