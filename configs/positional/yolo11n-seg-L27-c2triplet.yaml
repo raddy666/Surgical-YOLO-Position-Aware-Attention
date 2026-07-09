@@ -3,7 +3,7 @@
 # Total 5 Attention modules as specified in the architecture
 
 # Parameters
-nc: 80 # number of classes
+nc: 6 # number of classes
 scales: # model compound scaling constants
   # [depth, width, max_channels]
   n: [0.50, 0.25, 1024]
