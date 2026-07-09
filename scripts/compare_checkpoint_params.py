@@ -1,19 +1,26 @@
+import argparse
 from ultralytics import YOLO
+from ultralytics.utils.torch_utils import get_flops
 
-models = {
-    "Baseline":     "runs/segment/validate_100/yolo11n_seg_MSCA_seed1/weights/best.pt",
-    "Hybrid-L15CA": "runs/segment/hybrid/yolo11n_seg_c2triplet_c2ca_15_seed1/weights/best.pt",
-    "Full-CA":      "runs/segment/hybrid/yolo11n_seg_c2ca_seed1/weights/best.pt",
-    "Full-Triplet": "runs/segment/hybrid/yolo11n_seg_c2triplet_seed1/weights/best.pt",
-}
-for name, path in models.items():
-    model = YOLO(path)
 
-    params = sum(p.numel() for p in model.model.parameters())
+def main():
+    parser = argparse.ArgumentParser(description="Print params and GFLOPs for one or more trained checkpoints.")
+    parser.add_argument(
+        "checkpoints", nargs="+",
+        help="One or more NAME=PATH pairs, e.g. Baseline=runs/.../best.pt Hybrid-L15CA=runs/.../best.pt"
+    )
+    args = parser.parse_args()
 
-    try:
-        gflops = model.model.flops
-    except:
-        gflops = None
+    for item in args.checkpoints:
+        name, path = item.split("=", 1)
+        model = YOLO(path)
+        params = sum(p.numel() for p in model.model.parameters())
+        try:
+            gflops = get_flops(model.model)
+        except Exception:
+            gflops = None
+        print(f"{name}: params={params/1e6:.2f}M, GFLOPs={gflops}")
 
-    print(f"{name}: params={params/1e6:.2f}M, GFLOPs={gflops}")
+
+if __name__ == "__main__":
+    main()

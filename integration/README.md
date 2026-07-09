@@ -11,23 +11,23 @@ directly into your installed package rather than re-deriving the edits by hand.
 1. Install the exact pinned version:
    pip install ultralytics==8.3.185
 
-2. Find where it installed:
-   python -c "import ultralytics, os; print(os.path.dirname(ultralytics.__file__))"
+2. Run the integration script from the repo root — it does the file
+   copying below automatically:
+   python scripts/apply_integration.py
 
-3. Replace two files in your installed package with the ones in this folder:
-   - integration/nn/tasks.py            -> <install path>/nn/tasks.py
-   - integration/nn/modules/__init__.py -> <install path>/nn/modules/__init__.py
-
-4. Copy the actual attention module source into your installed package —
-   this repo's modules/attention/*.py files go FLAT into <install path>/nn/modules/
-   (not into a subfolder — the __init__.py above imports from .msca, .eca, .ca,
-   .triplet, .c2cbam, .gc, .simam, .ema, .biformer sitting right next to it):
-
-   cp modules/attention/*.py <install path>/nn/modules/
-
-5. Verify:
+3. Verify:
    python -c "from ultralytics.nn.modules import C2Triplet; print('ok')"
 
+## What the script does, if you'd rather do it by hand
+
+- Finds your install location: python -c "import ultralytics, os; print(os.path.dirname(ultralytics.__file__))"
+- Replaces two files in your installed package with the ones in this folder:
+  - integration/nn/tasks.py            -> <install path>/nn/tasks.py
+  - modules/attention/__init__.py -> <install path>/nn/modules/__init__.py
+- Copies this repo's modules/attention/*.py files FLAT into <install path>/nn/modules/
+  (not a subfolder — __init__.py above imports from .msca, .eca, .ca, .triplet,
+  .c2cbam, .gc, .simam, .ema, .biformer sitting right next to it)
+  
 ## What changed, exactly
 
 - nn/tasks.py: ~19 names added to the module import statement, 9 classes added

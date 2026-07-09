@@ -4,6 +4,7 @@
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.5.1-EE4C2C?logo=pytorch&logoColor=white)
 ![Ultralytics](https://img.shields.io/badge/Ultralytics-YOLO11-purple)
 ![Status](https://img.shields.io/badge/Result-Statistically%20Validated-brightgreen)
+![Tests](https://github.com/raddy666/Surgical-YOLO-Position-Aware-Attention/actions/workflows/tests.yml/badge.svg)
 
 📄 Full undergraduate thesis (background, all derivations, complete figures, full reference list) — link once added to `paper/`.
 
@@ -78,8 +79,9 @@ The dataset is clinical video from a single institution and cannot be shared pub
 ├── modules/attention/     # 9 attention mechanisms + their C2f wrappers — the core original contribution
 ├── integration/            # 2 modified Ultralytics files (mirrored paths) + patch instructions
 ├── configs/                # YAML architecture files for baseline + all 10 Phase 2 configurations
-├── scripts/                # training, validation, data prep, statistical analysis, figure generation
-├── tests/                  # smoke tests for each attention module
+├── scripts/                # training, validation, data prep, statistical analysis, figure generation, integration patching
+├── tests/                  # attention module + config-build regression tests
+├── .github/workflows/      # CI: runs the full test suite on every push
 ├── results/                # aggregated per-seed CSVs, statistical summaries, comparison spreadsheets
 ├── figures/                # the thesis's actual figures (heatmap, convergence curves, efficiency plots)
 ├── data.yaml                # schema/class-name reference (paths genericized, no data included)
@@ -94,7 +96,11 @@ This project depends on Ultralytics YOLO as a normal pip package — it is never
 pip install -r requirements.txt   # installs ultralytics==8.3.185 and the rest of the stack
 ```
 
-Then apply the integration patch — see [`integration/README.md`](./integration/README.md) for exact copy-paste instructions.
+Then apply the integration patch:
+```bash
+python scripts/apply_integration.py
+```
+(see [`integration/README.md`](./integration/README.md) for what this does under the hood)
 
 ## Verifying the setup
 
@@ -110,6 +116,24 @@ from ultralytics import YOLO
 model = YOLO("configs/yolo11n-seg.yaml")
 model.info()  # should show ~3.636M parameters
 ```
+All of this is automated in `tests/` and runs on every push via GitHub Actions:
+```bash
+pytest tests/ -v
+```
+
+## Utility scripts
+
+A few scripts document the actual tooling behind specific claims made above,
+rather than leaving them unverifiable assertions:
+
+- `scripts/count_class_distribution.py` — per-class instance counts across
+  train/val splits (the source of the Herniation: 434 / Muscle: 202
+  minority-class figures in the Results section)
+- `scripts/find_best_seed.py` — scans a multi-seed run directory and
+  extracts the best-performing seed's checkpoint (the actual seed-selection
+  method used in Phase 2)
+- `scripts/compare_checkpoint_params.py` — params/GFLOPs check for any
+  trained checkpoint, given a path
 
 ## What's original here, and what's reused
 

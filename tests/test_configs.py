@@ -1,4 +1,5 @@
 import pytest
+import torch
 from ultralytics import YOLO
 
 # expected params in millions, ~1% tolerance
@@ -16,3 +17,16 @@ def test_config_builds_and_param_count_matches(yaml_path, expected_m):
     assert abs(params_m - expected_m) / expected_m < 0.01, (
         f"{yaml_path}: expected ~{expected_m}M, got {params_m:.3f}M"
     )
+
+
+@pytest.mark.parametrize("yaml_path,expected_m", CONFIGS)
+def test_full_forward_pass_at_inference_resolution(yaml_path, expected_m):
+    """Full end-to-end forward pass at 640x640 — catches integration issues
+    a parameter count alone won't (e.g. shape mismatches between an
+    attention block's output and the next layer's expected input)."""
+    model = YOLO(yaml_path)
+    model.model.eval()
+    dummy_input = torch.randn(1, 3, 640, 640)
+    with torch.no_grad():
+        output = model.model(dummy_input)
+    assert output is not None
