@@ -10,7 +10,7 @@ shutil.copy(
     os.path.join(UL_PATH, "nn", "tasks.py"),
 )
 shutil.copy(
-    os.path.join(REPO_ROOT, "modules", "attention", "__init__.py"),
+    os.path.join(REPO_ROOT, "integration", "nn", "modules", "__init__.py"),
     os.path.join(UL_PATH, "nn", "modules", "__init__.py"),
 )
 
