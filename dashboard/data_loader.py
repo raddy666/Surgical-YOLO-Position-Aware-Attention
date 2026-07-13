@@ -4,7 +4,6 @@ import pickle
 import numpy as np
 import pandas as pd
 from collections import defaultdict
-
 from scipy import stats
 
 POSITIONS = ["L11", "L15", "L19", "L23", "L27"]

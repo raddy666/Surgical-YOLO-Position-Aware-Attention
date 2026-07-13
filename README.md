@@ -133,17 +133,21 @@ pytest tests/ -v
 
 ## Utility scripts
 
-A few scripts document the actual tooling behind specific claims made above,
-rather than leaving them unverifiable assertions:
+A few scripts document the actual tooling behind specific claims made above
+and behind the dashboard's data, rather than leaving them unverifiable:
 
-- `scripts/count_class_distribution.py` — per-class instance counts across
-  train/val splits (the source of the Herniation: 434 / Muscle: 202
-  minority-class figures in the Results section)
+- `scripts/count_class_distribution.py` — per-class instance counts (source
+  of the Herniation: 434 / Muscle: 202 minority-class figures)
 - `scripts/find_best_seed.py` — scans a multi-seed run directory and
-  extracts the best-performing seed's checkpoint (the actual seed-selection
-  method used in Phase 2)
+  extracts the best-performing seed's checkpoint
 - `scripts/compare_checkpoint_params.py` — params/GFLOPs check for any
   trained checkpoint, given a path
+- `scripts/generate_phase2_full_results.py` — per-class mAP, inference
+  speed, and complexity for all 10 Phase 2 configurations
+- `scripts/generate_confusion_matrices.py` — normalized confusion matrices
+  for the 4 headline configs
+- `scripts/merge_training_curves.py` — merges all per-run `results.csv`
+  training logs into one file for the dashboard's Training Diagnostics tab
 
 ## What's original here, and what's reused
 
