@@ -1,0 +1,13 @@
+split,class_name,instances
+train,IntervertebralDisc,1294
+train,Skeleton,949
+train,Ligament,3001
+train,Muscle,202
+train,Nerve,2964
+train,IntervertebralDiscHerniation,434
+val,IntervertebralDisc,240
+val,Skeleton,154
+val,Ligament,552
+val,Muscle,47
+val,Nerve,556
+val,IntervertebralDiscHerniation,92

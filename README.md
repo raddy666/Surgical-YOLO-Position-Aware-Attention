@@ -5,6 +5,7 @@
 ![Ultralytics](https://img.shields.io/badge/Ultralytics-YOLO11-purple)
 ![Status](https://img.shields.io/badge/Result-Statistically%20Validated-brightgreen)
 ![Tests](https://github.com/raddy666/Surgical-YOLO-Position-Aware-Attention/actions/workflows/tests.yml/badge.svg)
+[![Dashboard](https://img.shields.io/badge/Dashboard-Live-success)](https://surgical-yolo-position-aware-attention.streamlit.app/)
 
 📄 Full undergraduate thesis (background, all derivations, complete figures, full reference list) — link once added to `paper/`.
 
@@ -68,6 +69,14 @@ The L27 null result is the load-bearing finding of this whole study: the *same* 
 
 **Hardware:** NVIDIA RTX 3060 Laptop GPU (6GB VRAM), batch size 6, 640×640 input, AMP, SGD, ImageNet-pretrained initialization. Total experimental compute: ~10 weeks of training across both phases.
 
+## Interactive Dashboard
+
+All the results above — plus several deeper breakdowns not in this README — are explorable live:
+
+**[surgical-yolo-position-aware-attention.streamlit.app](https://surgical-yolo-position-aware-attention.streamlit.app/)**
+
+Speed-vs-accuracy trade-off across all 10 Phase 2 configurations, per-structure performance with configurable comparisons, the full Phase 1 position × mechanism screening heatmap, training curves (any metric, any config, mean or per-seed), confusion matrices, effect-size/stability analysis, and dataset class distribution — built with Streamlit + Plotly, source in `dashboard/`.
+
 ## Data — not included, and why
 
 The dataset is clinical video from a single institution and cannot be shared publicly without institutional/ethics clearance. This repository is code, methodology, and results — not a downloadable dataset. If you want to run the training pipeline yourself, point `scripts/train.py` at your own dataset in the standard YOLO segmentation format (`images/train`, `images/val`, `labels/train`, `labels/val`, plus a `data.yaml` — see `data.yaml` in this repo for the expected schema and class names). You won't reproduce the exact clinical numbers above without the original data, but the full pipeline — architecture, training, statistical evaluation — runs against any correctly formatted segmentation dataset.
@@ -82,7 +91,8 @@ The dataset is clinical video from a single institution and cannot be shared pub
 ├── scripts/                # training, validation, data prep, statistical analysis, figure generation, integration patching
 ├── tests/                  # attention module + config-build regression tests
 ├── .github/workflows/      # CI: runs the full test suite on every push
-├── results/                # aggregated per-seed CSVs, statistical summaries, comparison spreadsheets
+├── dashboard/               # interactive Streamlit + Plotly dashboard (live link above)
+├── results/                # aggregated per-seed CSVs feeding both this README and the dashboard
 ├── figures/                # the thesis's actual figures (heatmap, convergence curves, efficiency plots)
 ├── data.yaml                # schema/class-name reference (paths genericized, no data included)
 └── requirements.txt
@@ -150,7 +160,7 @@ Single institution, single procedure type, single dataset (6,958 frames) — fin
 
 - [ ] Attention visualization (Grad-CAM adapted for detection/segmentation heads) — directly addresses the limitation above
 - [ ] ONNX / TensorRT export and inference-speed benchmarking of Hybrid-L15CA
-- [ ] Interactive results dashboard rebuilding the Phase 1 heatmap and per-structure comparisons from the raw seed data
+- [x] Interactive results dashboard rebuilding the Phase 1 heatmap and per-structure comparisons from the raw seed data
 - [ ] Live inference demo
 - [ ] Manuscript in preparation
 
