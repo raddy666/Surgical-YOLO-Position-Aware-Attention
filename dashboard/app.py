@@ -32,7 +32,7 @@ with tab1:
         labels={"fps": "Inference Speed (FPS)", "mean_map": "mAP50-95"},
     )
     fig1.update_traces(textposition="top center", marker=dict(size=12))
-    st.plotly_chart(fig1, use_container_width=True)
+    st.plotly_chart(fig1, width=True)
 
 with tab2:
     st.subheader("Per-Structure mAP50-95")
@@ -44,7 +44,7 @@ with tab2:
         x="class_name", y="map50_95", color="config", barmode="group",
         labels={"class_name": "Anatomical Structure", "map50_95": "mAP50-95", "config": "Configuration"},
     )
-    st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig2, width=True)
 
 with tab3:
     st.subheader("Phase 1 Screening: mAP50-95 Improvement (Δ%) by Position × Mechanism")
@@ -57,7 +57,7 @@ with tab3:
         hoverongaps=False,
     ))
     fig3.update_layout(xaxis_title="Attention Mechanism", yaxis_title="Attention Position")
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig3, width=True)
 
 with tab4:
     st.subheader("Training Diagnostics")
@@ -85,7 +85,7 @@ with tab4:
         plot_df["run"] = plot_df["config"] + " – seed" + plot_df["seed"].astype(str)
         fig4 = px.line(plot_df, x="epoch", y=metric, color="run")
 
-    st.plotly_chart(fig4, use_container_width=True)
+    st.plotly_chart(fig4, width=True)
 
 with tab5:
     st.subheader("Confusion Matrix (Normalized)")
@@ -96,7 +96,7 @@ with tab5:
         colorscale="Blues", text=cm_pivot.values, texttemplate="%{text:.2f}",
     ))
     fig5.update_layout(xaxis_title="Predicted", yaxis_title="True")
-    st.plotly_chart(fig5, use_container_width=True)
+    st.plotly_chart(fig5, width=True)
 
 with tab6:
     st.subheader("Phase 2 Configuration Comparison (100 Epochs, 10 Seeds Each)")
@@ -124,7 +124,7 @@ with tab6:
         y=stats_df.loc[stats_df["config"] == "Baseline", "mean_map"].values[0],
         line_dash="dash", line_color="gray",
     )
-    st.plotly_chart(fig6, use_container_width=True)
+    st.plotly_chart(fig6, width=True)
     st.caption("* p<0.05 vs baseline (and CV<1.5%) · ns = not significant · † fails CV<1.5% stability threshold")
 
 with tab7:
@@ -159,7 +159,7 @@ with tab7:
     fig7.update_yaxes(title_text="Cohen's d", row=1, col=1)
     fig7.update_yaxes(title_text="Structures significantly improved", row=1, col=2, secondary_y=False, range=[0, 7])
     fig7.update_yaxes(title_text="CV%", row=1, col=2, secondary_y=True)
-    st.plotly_chart(fig7, use_container_width=True)
+    st.plotly_chart(fig7, width=True)
 
 with tab8:
     st.subheader("Dataset: Class Instance Distribution")
@@ -168,7 +168,7 @@ with tab8:
         dist_df, x="class_name", y="instances", color="split", barmode="group",
         labels={"class_name": "Anatomical Structure", "instances": "Label Instances", "split": "Split"},
     )
-    st.plotly_chart(fig8, use_container_width=True)
+    st.plotly_chart(fig8, width=True)
     st.caption(
         "Minority classes: Muscle and IntervertebralDiscHerniation have the fewest "
         "instances, which limits confidence in structure-level conclusions for those two."
