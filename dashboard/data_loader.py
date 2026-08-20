@@ -1,10 +1,7 @@
 import re
 import ast
-import pickle
 import numpy as np
 import pandas as pd
-from pathlib import Path
-from collections import defaultdict
 from scipy import stats
 
 POSITIONS = ["L11", "L15", "L19", "L23", "L27"]
@@ -64,33 +61,8 @@ def load_per_class_results(csv_path="results/phase2_per_class_all10.csv"):
     df = pd.read_csv(csv_path)
     return df.groupby(["config", "class_name"])["map50_95"].mean().reset_index()
 
-def load_phase1_heatmap(pkl_path="results/all_per_class_results.pkl"):
-    with open(pkl_path, "rb") as f:
-        d = pickle.load(f)
-
-    config_maps = defaultdict(list)
-    for key, sample in d.items():
-        raw_config, seed = parse_key(key)
-        if raw_config:
-            config_maps[raw_config].append(sample["seg"].map)  # overall mAP50-95, not per-class
-
-    baseline_key = "yolo11n_msca_seg"
-    if baseline_key not in config_maps:
-        raise ValueError(f"Baseline key '{baseline_key}' not found — check actual key name in pickle")
-    baseline_map = np.mean(config_maps[baseline_key])
-
-    rows = []
-    for raw_config, maps in config_maps.items():
-        if raw_config == baseline_key:
-            continue
-        position, mechanism = parse_config(raw_config)
-        if position is None or mechanism is None:
-            print(f"Warning: couldn't parse '{raw_config}' into position/mechanism")
-            continue
-        delta_pct = (np.mean(maps) - baseline_map) / baseline_map * 100
-        rows.append({"position": position, "mechanism": mechanism, "delta_pct": delta_pct})
-
-    df = pd.DataFrame(rows)
+def load_phase1_heatmap(csv_path="results/phase1_heatmap_data.csv"):
+    df = pd.read_csv(csv_path)
     return df.pivot(index="position", columns="mechanism", values="delta_pct")
 
 def load_training_curves(csv_path="results/training_curves_merged.csv"):
