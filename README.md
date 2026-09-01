@@ -93,6 +93,7 @@ The dataset is clinical video from a single institution and cannot be shared pub
 ├── .github/workflows/      # CI: runs the full test suite on every push
 ├── dashboard/               # interactive Streamlit + Plotly dashboard (live link above)
 ├── results/                # aggregated per-seed CSVs feeding both this README and the dashboard
+├── gradcam/                 # EigenCAM attention visualization — see gradcam/README.md
 ├── figures/                # the thesis's actual figures (heatmap, convergence curves, efficiency plots)
 ├── data.yaml                # schema/class-name reference (paths genericized, no data included)
 └── requirements.txt
@@ -158,11 +159,11 @@ and behind the dashboard's data, rather than leaving them unverifiable:
 
 ## Limitations
 
-Single institution, single procedure type, single dataset (6,958 frames) — findings on position-mechanism preference are dataset-specific, not a general theory of attention placement. Minority classes (Herniation: 434 instances, Muscle: 202) reduce confidence in structure-level conclusions for those classes specifically. Only four mechanism families were carried to full validation; better-suited mechanisms for L11/L27 may exist outside the tested set. Inference speed and parameter counts are specific to the RTX 3060 Laptop GPU used. No attention map visualization was conducted to confirm the mechanisms attend to anatomically meaningful regions rather than producing gains through other computational interactions — in progress, see Roadmap. Not validated in a live surgical deployment environment; all experiments are offline, on pre-recorded frames.
+Single institution, single procedure type, single dataset (6,958 frames) — findings on position-mechanism preference are dataset-specific, not a general theory of attention placement. Minority classes (Herniation: 434 instances, Muscle: 202) reduce confidence in structure-level conclusions for those classes specifically. Only four mechanism families were carried to full validation; better-suited mechanisms for L11/L27 may exist outside the tested set. Inference speed and parameter counts are specific to the RTX 3060 Laptop GPU used. EigenCAM-based attention visualization (see `gradcam/README.md`) confirms position-dependent behavior qualitatively: the same Triplet Attention mechanism shows anomalously stable, content-independent localization at L19 (concentration 0.94–0.98) versus wide, content-dependent variation at the structurally similar L23 (0.46–0.96), corroborating the position-dependence finding above through an independent method. All three visualized layers also show a content-invariant positional bias toward the fixed camera/timestamp overlay location in training frames — a real caveat for deployment on footage without this exact overlay. Gradient-based Grad-CAM (class-discriminative attribution) has not yet been implemented; see Roadmap. Not validated in a live surgical deployment environment; all experiments are offline, on pre-recorded frames.
 
 ## Roadmap
 
-- [ ] Attention visualization (Grad-CAM adapted for detection/segmentation heads) — directly addresses the limitation above
+- [x] Attention visualization (EigenCAM) — directly addresses the limitation above; see `gradcam/README.md`. Gradient-based Grad-CAM proper still pending.
 - [ ] ONNX / TensorRT export and inference-speed benchmarking of Hybrid-L15CA
 - [x] Interactive results dashboard rebuilding the Phase 1 heatmap and per-structure comparisons from the raw seed data
 - [ ] Live inference demo
