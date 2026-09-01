@@ -10,7 +10,7 @@ FRAMES_DIR = "gradcam/frames"
 OUTPUT_DIR = "gradcam/outputs"
 IMG_SIZE = 640
 PAD_VALUE = 114 / 255.0
-OVERLAY_MASK_FRACTION = 0.15  # top rows to zero out — timestamp/camera-icon burn-in region
+OVERLAY_MASK_FRACTION = 0.0  # top rows to zero out — timestamp/camera-icon burn-in region
 
 
 def detect_content_bounds(input_tensor, tol=0.02):

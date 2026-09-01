@@ -45,13 +45,9 @@ Ultralytics' pad constant (114/255) rather than recomputed from source-image geo
 rows[12:372] of the 640×384 model input.
 
 Each layer's activation is cropped to the content region before EigenCAM's SVD is
-computed, so the heatmap isn't diluted by padding. A further region — the bottom
-`OVERLAY_MASK_FRACTION` (15%) of the content area, where a fixed timestamp/camera
-overlay sits in every frame — is **cropped out of the SVD input**, not zeroed. An
-earlier version zeroed that region in place, which created a hard-edge artifact that
-the SVD picked up as a spurious feature; cropping avoids introducing anything for the
-decomposition to see. The overlay color is only painted back onto the final image for
-display, on the un-cropped output region below the crop line.
+computed, so the heatmap isn't diluted by padding. No further region is excluded —
+the full content region, overlay included, feeds the SVD (see Finding 4 for what
+that shows about the overlay).
 
 Heatmaps from different layers are resized to a common shape (`cv2.INTER_AREA`,
 smallest layer's resolution) before any cross-layer comparison, since L15/L19/L23
@@ -71,7 +67,7 @@ single comparable number per layer per frame, independent of the heatmap's raw s
 
 ## Findings
 
-**1. L15 (Coordinate Attention) — widest concentration range (0.23–0.98), content-dependent.**
+**1. L15 (Coordinate Attention) — widest concentration range (0.26–0.98), content-dependent.**
 Its localization varies substantially with frame content, plausibly consistent with
 CA's architecture: separate height-pooled and width-pooled descriptors combined via
 outer product, which can sharpen or diffuse depending on what's actually in each
@@ -83,7 +79,7 @@ suggesting this position learns closer to a uniform recalibration than a sharp
 spatial gate. An overlay-artifact explanation was tested and ruled out (see Finding 4
 and the masking ablation below) — the stability isn't a measurement artifact.
 
-**3. L23 (Triplet Attention) — wide range (0.46–0.96), despite identical mechanism to L19.**
+**3. L23 (Triplet Attention) — wide range (0.43–0.98), despite identical mechanism to L19.**
 This is the load-bearing qualitative result: the *same* attention mechanism at a
 different pyramid position behaves differently. It corroborates the thesis's core
 quantitative finding (position, not mechanism, determines effectiveness — see main
@@ -91,10 +87,13 @@ quantitative finding (position, not mechanism, determines effectiveness — see 
 
 **4. Separate finding — content-invariant positional bias toward the overlay location.**
 All three layers show heatmap activity anchored to the fixed timestamp/camera-icon
-overlay position, even after that region's actual pixel content is manually cropped
-out of the source frame before inference. Since the overlay sat at an identical
-position in every training frame, the most likely explanation is that the network
-learned to treat that spatial location as an expected/anchor feature independent of
+overlay position. To test whether this was driven by the overlay's actual pixel
+content, the overlay regions were cropped/masked from the source frame before
+inference — the heatmap still activated at the same top-left/top-right positions
+(see the masking-ablation example below), ruling out "the model is reacting to the
+overlay's visible pixels" as the explanation. Since the overlay sat at an identical
+position in every training frame, the more likely explanation is that the network
+learned to treat those spatial locations as expected/anchor features independent of
 what's actually rendered there. This is a real deployment caveat, not a training bug:
 footage without this exact overlay wasn't part of training and this behavior is
 untested against it. It's a separate finding from #2 above (content-invariance for a
@@ -103,12 +102,25 @@ mechanism) and is documented as a caveat in the main README's Limitations sectio
 
 ## Example overlays
 
-![L19 on the same frame](outputs/9-1_Video5_24320_L19_C2Triplet.png)
+**Cross-layer comparison** (same frame, `9-1_Video5_24320`) — L15 and L23 show sharp, localized hotspots; L19 shows a broad, near-uniform response despite an identical mechanism to L23:
 
-![L23 on the same frame](outputs/9-1_Video5_24320_L23_C2Triplet.png)
+<table>
+<tr>
+<td><img src="outputs/9-1_Video5_24320_L15_C2CA.png" width="280"><br><sub>L15 (C2CA)</sub></td>
+<td><img src="outputs/9-1_Video5_24320_L19_C2Triplet.png" width="280"><br><sub>L19 (C2Triplet)</sub></td>
+<td><img src="outputs/9-1_Video5_24320_L23_C2Triplet.png" width="280"><br><sub>L23 (C2Triplet)</sub></td>
+</tr>
+</table>
 
-![L15 content-dependent example](outputs/9-1_Video5_24320_L15_C2CA.png)
+**L19 stability across frames** — the near-uniform response in the table above persists on a second, different frame, supporting Finding 2:
 
+<img src="outputs/10-1_10_Video2_00057_L19_C2Triplet.png" width="280">
+<br><sub>L19 (C2Triplet), frame 10-1_10_Video2_00057</sub>
+
+**Overlay masking ablation** (Finding 4) — the same frame with the overlay regions cropped/masked from the source before inference; the heatmap still activates at the same top-left/top-right positions, showing the model anchors to those spatial locations regardless of what's actually rendered there:
+
+<img src="outputs/10-1_10_Video2_00057_L19_C2Triplet_masking_overlay.png" width="280">
+<br><sub>L19 (C2Triplet), frame 10-1_10_Video2_00057, overlay masked</sub>
 
 ## Reproducing
 
