@@ -5,9 +5,9 @@ import torch
 from ultralytics import YOLO
 
 WEIGHTS = "E:/thesis/train_YOLO/train_YOLO/runs/segment/hybrid/yolo11n_seg_c2triplet_c2ca_15_seed1/weights/best.pt"
-LAYER_INDICES = {15: "L15_C2CA", 19: "L19_C2Triplet", 23: "L23_C2Triplet"}
+LAYER_INDICES = {11: "L11_MSCA", 15: "L15_C2CA", 19: "L19_C2Triplet", 23: "L23_C2Triplet", 27: "L27_MSCA"}
 FRAMES_DIR = "gradcam/frames"
-OUTPUT_DIR = "gradcam/outputs"
+OUTPUT_DIR = "gradcam/outputs_eigencam"
 IMG_SIZE = 640
 PAD_VALUE = 114 / 255.0
 OVERLAY_MASK_FRACTION = 0.0  # to zero out top rows (timestamp/camera-icon burn-in region)

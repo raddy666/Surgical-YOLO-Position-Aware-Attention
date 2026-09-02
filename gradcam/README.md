@@ -106,9 +106,11 @@ mechanism) and is documented as a caveat in the main README's Limitations sectio
 
 <table>
 <tr>
+<td><img src="outputs_eigencam/9-1_Video5_24320_L11_MSCA.png" width="280"><br><sub>L11 (C2MSCA)</sub></td>
 <td><img src="outputs_eigencam/9-1_Video5_24320_L15_C2CA.png" width="280"><br><sub>L15 (C2CA)</sub></td>
 <td><img src="outputs_eigencam/9-1_Video5_24320_L19_C2Triplet.png" width="280"><br><sub>L19 (C2Triplet)</sub></td>
 <td><img src="outputs_eigencam/9-1_Video5_24320_L23_C2Triplet.png" width="280"><br><sub>L23 (C2Triplet)</sub></td>
+<td><img src="outputs_eigencam/9-1_Video5_24320_L27_MSCA.png" width="280"><br><sub>L27 (C2MSCA)</sub></td>
 </tr>
 </table>
 
