@@ -106,20 +106,20 @@ mechanism) and is documented as a caveat in the main README's Limitations sectio
 
 <table>
 <tr>
-<td><img src="outputs/9-1_Video5_24320_L15_C2CA.png" width="280"><br><sub>L15 (C2CA)</sub></td>
-<td><img src="outputs/9-1_Video5_24320_L19_C2Triplet.png" width="280"><br><sub>L19 (C2Triplet)</sub></td>
-<td><img src="outputs/9-1_Video5_24320_L23_C2Triplet.png" width="280"><br><sub>L23 (C2Triplet)</sub></td>
+<td><img src="outputs_eigencam/9-1_Video5_24320_L15_C2CA.png" width="280"><br><sub>L15 (C2CA)</sub></td>
+<td><img src="outputs_eigencam/9-1_Video5_24320_L19_C2Triplet.png" width="280"><br><sub>L19 (C2Triplet)</sub></td>
+<td><img src="outputs_eigencam/9-1_Video5_24320_L23_C2Triplet.png" width="280"><br><sub>L23 (C2Triplet)</sub></td>
 </tr>
 </table>
 
 **L19 stability across frames**: the near-uniform response in the table above persists on a second, different frame, supporting Finding 2:
 
-<img src="outputs/10-1_10_Video2_00057_L19_C2Triplet.png" width="280">
+<img src="outputs_eigencam/10-1_10_Video2_00057_L19_C2Triplet.png" width="280">
 <br><sub>L19 (C2Triplet), frame 10-1_10_Video2_00057</sub>
 
 **Overlay masking ablation** (Finding 4): the same frame with the overlay regions cropped/masked from the source before inference; the heatmap still activates at the same top-left/top-right positions, showing the model anchors to those spatial locations regardless of what's actually rendered there:
 
-<img src="outputs/10-1_10_Video2_00057_L19_C2Triplet_masking_overlay.png" width="280">
+<img src="outputs_eigencam/10-1_10_Video2_00057_L19_C2Triplet_masking_overlay.png" width="280">
 <br><sub>L19 (C2Triplet), frame 10-1_10_Video2_00057, overlay masked</sub>
 
 ## Method 2: Grad-CAM
