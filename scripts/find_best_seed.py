@@ -30,8 +30,7 @@ def main():
     output_dir = args.output_dir or f"best_run_{args.exp_name}"
     os.makedirs(output_dir, exist_ok=True)
     src = os.path.join(args.base_dir, f"{args.exp_name}_seed{best_seed}")
-    for f in os.listdir(src):
-        shutil.copy(os.path.join(src, f), output_dir)
+    shutil.copytree(src, output_dir, dirs_exist_ok=True)
     print(f"Copied to {output_dir}/")
 
 

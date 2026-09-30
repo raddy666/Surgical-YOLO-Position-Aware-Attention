@@ -24,6 +24,8 @@ weights/
 
 # Model checkpoints
 *.pt
+*.onnx
+*.engine
 
 # Excel lock files
 ~$*.xlsx

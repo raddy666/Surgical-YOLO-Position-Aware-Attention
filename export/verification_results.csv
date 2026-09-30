@@ -1,0 +1,4 @@
+target,weights,box_map,mask_map,box_map_diff,mask_map_diff,parity_status,preprocess_ms,inference_ms,postprocess_ms,total_ms,fps_inference_only,fps_total_pipeline
+pt,E:/thesis/train_YOLO/train_YOLO/runs/segment/hybrid/yolo11n_seg_c2triplet_c2ca_15_seed2/weights/best.pt,0.6668,0.6029,0.0,0.0,baseline,0.2,4.159,1.634,5.993,240.43,166.86
+onnx,export/best.onnx,0.6656,0.6029,0.0012,0.0,OK,0.566,12.136,2.432,15.135,82.4,66.07
+engine,export/best.engine,0.6655,0.6033,0.0013,0.0004,OK,0.527,5.225,2.607,8.359,191.39,119.63
