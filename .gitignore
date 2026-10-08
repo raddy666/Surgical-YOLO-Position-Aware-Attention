@@ -13,19 +13,10 @@ venv/
 env/
 ENV/
 
-# Clinical dataset
-/images/
-/labels/
-/data/
 
 # Training run
 runs/
-weights/
 
-# Model checkpoints
-*.pt
-*.onnx
-*.engine
 
 # Excel lock files
 ~$*.xlsx
