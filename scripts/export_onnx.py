@@ -1,7 +1,7 @@
 import os
 from ultralytics import YOLO
 
-WEIGHTS = "E:/thesis/train_YOLO/train_YOLO/runs/segment/hybrid/yolo11n_seg_c2triplet_c2ca_15_seed2/weights/best.pt"
+WEIGHTS = "weights/best.pt"
 
 EXPORT_DIR = "export"
 IMG_SIZE = 640

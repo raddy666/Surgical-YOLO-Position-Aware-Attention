@@ -7,7 +7,7 @@ exported artifacts rather than assume they're equivalent.
 ## Checkpoint used
 
 Best-performing seed selected via `scripts/find_best_seed.py`: seed 2,
-`.../hybrid/yolo11n_seg_c2triplet_c2ca_15_seed2/weights/best.pt`. This
+`weights/best.pt`. This
 differs from the seed used for the Grad-CAM/EigenCAM visualizations
 (seed 1, chosen there for a different reason: consistency with the
 paper's headline configuration example, not best raw mAP), so a small

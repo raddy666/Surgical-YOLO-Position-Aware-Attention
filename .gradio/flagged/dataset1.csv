@@ -1,0 +1,2 @@
+Upload a frame,Attention layer,Segmentation (ONNX),Grad-CAM attention (.pt),Grad-CAM target,timestamp
+.gradio\flagged\Upload a frame\ab51752d6fe0754206fe\10-1_10_Video2_00039.jpg,L23_C2Triplet,.gradio\flagged\Segmentation (ONNX)\ec6c39eb9fc0d63ec156\image.webp,.gradio\flagged\Grad-CAM attention (.pt)\247ebaca1eaef2a6b8c5\image.webp,Grad-CAM target: Skeleton (confidence 0.744),2026-10-06 08:42:15.543222

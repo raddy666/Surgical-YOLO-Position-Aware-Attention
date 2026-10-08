@@ -2,13 +2,13 @@ import csv
 import numpy as np
 from ultralytics import YOLO
 
-PT_WEIGHTS = "E:/thesis/train_YOLO/train_YOLO/runs/segment/hybrid/yolo11n_seg_c2triplet_c2ca_15_seed2/weights/best.pt"
+PT_WEIGHTS = "weights/best.pt"
 ONNX_WEIGHTS = "export/best.onnx"
 ENGINE_WEIGHTS = "export/best.engine"
 
 DATA_YAML = "E:/thesis/train_YOLO/train_YOLO/data.yaml"
 IMG_SIZE = 640
-SAMPLE_FRAME = "gradcam/frames/9-1_Video5_24320.jpg"
+SAMPLE_FRAME = "data/frames/9-1_Video5_24320.jpg"
 MAP_TOLERANCE = 0.005  # 0.5%
 OUTPUT_CSV = "export/verification_results.csv"
 

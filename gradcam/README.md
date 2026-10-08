@@ -30,7 +30,7 @@ throughout the rest of the repo:
 | L19 | C2Triplet | Segmentation-head input (P3, 80×80) |
 | L23 | C2Triplet | Segmentation-head input (P4, 40×40) |
 
-Weights: `Hybrid-L15CA`, seed 1 (`.../hybrid/yolo11n_seg_c2triplet_c2ca_15_seed1/weights/best.pt`),
+Weights: `Hybrid-L15CA`, seed 1 (`weights/best.pt`),
 the paper's headline configuration.
 
 ## Pipeline notes
@@ -250,7 +250,7 @@ prints per-layer concentration scores to stdout.
 ```bash
 python gradcam/run_gradcam.py
 ```
-Reads the same frames plus their YOLO-seg polygon labels from `gradcam/labels/`
+Reads the same frames plus their YOLO-seg polygon labels from `data/labels/`
 (same stem, `.txt`), generates one heatmap per annotated class per frame, writes
 overlays to `gradcam/outputs_gradcam/`, and writes per-row concentration/confidence/
 GT-overlap numbers to `gradcam/outputs_gradcam/results.csv`.

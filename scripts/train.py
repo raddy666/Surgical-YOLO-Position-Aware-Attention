@@ -18,7 +18,7 @@ def main():
         # Explicitly specify the use of the n-scale model
     # )
     # 3. Validate the model (using the best weights from training)
-    best_model = YOLO("runs/segment/hybrid/yolo11n_seg_c2triplet_c2ca_15_seed10/weights/best.pt")
+    best_model = YOLO("weights/best.pt")
     best_model.val(
         data="data.yaml",
         batch=6,
