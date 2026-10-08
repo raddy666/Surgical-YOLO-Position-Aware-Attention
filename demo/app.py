@@ -68,4 +68,4 @@ with gr.Blocks(title="Surgical-YOLO: Segmentation + Attention Demo") as demo:
     layer_dd.change(run_gradcam, inputs=[state_image, state_detections, class_dd, layer_dd], outputs=[cam_out, info_out])
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(server_name="0.0.0.0", server_port=int(os.environ.get("PORT", 7860)))
