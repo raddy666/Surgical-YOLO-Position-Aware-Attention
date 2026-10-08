@@ -7,7 +7,7 @@
 ![Tests](https://github.com/raddy666/Surgical-YOLO-Position-Aware-Attention/actions/workflows/tests.yml/badge.svg)
 [![Dashboard](https://img.shields.io/badge/Dashboard-Live-success)](https://surgical-yolo-position-aware-attention.streamlit.app/)
 
-📄 Full undergraduate thesis (background, all derivations, complete figures, full reference list); link once added to `paper/`.
+📄 [Full undergraduate thesis](paper/thesis_paper.pdf) (background, all derivations, complete figures, full reference list).
 
 ## TL;DR
 
