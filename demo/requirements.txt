@@ -1,7 +1,9 @@
 --extra-index-url https://download.pytorch.org/whl/cpu
-torch
-gradio
-onnxruntime
-ultralytics
-opencv-python-headless
-numpy
+torch==2.5.1
+torchvision==0.20.1
+ultralytics==8.3.185
+onnxruntime==1.20.1
+opencv-python==4.11.0.86
+opencv-python-headless==4.11.0.86
+numpy==2.0.1
+gradio==6.29.1
