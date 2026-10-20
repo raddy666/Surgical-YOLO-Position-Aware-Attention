@@ -1,10 +1,9 @@
 import cv2
 import numpy as np
 import onnxruntime as ort
-from sympy import content
 
 from config import (
-    CLASS_NAMES, NUM_CLASSES, IMG_SIZE, CONF_THRESHOLD,
+    NUM_CLASSES, IMG_SIZE, CONF_THRESHOLD,
     IOU_THRESHOLD, MASK_THRESHOLD, ONNX_WEIGHTS,
 )
 
@@ -14,8 +13,12 @@ _session = None
 def get_session():
     global _session
     if _session is None:
+        opts = ort.SessionOptions()
+        opts.enable_cpu_mem_arena = False
+        opts.enable_mem_pattern = False
+        opts.intra_op_num_threads = 1
         _session = ort.InferenceSession(
-            ONNX_WEIGHTS, providers=["CUDAExecutionProvider", "CPUExecutionProvider"]
+            ONNX_WEIGHTS, sess_options=opts, providers=["CPUExecutionProvider"]
         )
     return _session
 

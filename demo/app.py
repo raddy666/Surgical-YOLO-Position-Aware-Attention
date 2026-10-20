@@ -5,7 +5,6 @@ import gradio as gr
 
 from config import CLASS_NAMES, LAYER_INDICES, COLOR_PALETTE
 from onnx_infer import run_segmentation
-from gradcam_infer import gradcam_for_layer
 
 
 def draw_segmentation(original_bgr, detections):
@@ -41,6 +40,7 @@ def segment(image):
 def run_gradcam(original_bgr, detections, target_class_name, layer_choice):
     if original_bgr is None or not detections or target_class_name is None:
         return None, "Upload a frame first"
+    from gradcam_infer import gradcam_for_layer
     target_class = CLASS_NAMES.index(target_class_name)
     layer_idx = {v: k for k, v in LAYER_INDICES.items()}[layer_choice]
     cam_overlay, cls_name, conf = gradcam_for_layer(original_bgr, layer_idx, target_class)
