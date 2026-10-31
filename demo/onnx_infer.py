@@ -4,7 +4,7 @@ import onnxruntime as ort
 
 from config import (
     NUM_CLASSES, IMG_SIZE, CONF_THRESHOLD,
-    IOU_THRESHOLD, MASK_THRESHOLD, ONNX_WEIGHTS,
+    IOU_THRESHOLD, MASK_THRESHOLD, ONNX_WEIGHTS, MAX_SIDE,
 )
 
 _session = None
@@ -21,6 +21,14 @@ def get_session():
             ONNX_WEIGHTS, sess_options=opts, providers=["CPUExecutionProvider"]
         )
     return _session
+
+
+def shrink(bgr):
+    h, w = bgr.shape[:2]
+    scale = MAX_SIDE / max(h, w)
+    if scale >= 1:
+        return bgr
+    return cv2.resize(bgr, (round(w * scale), round(h * scale)), interpolation=cv2.INTER_AREA)
 
 
 def letterbox(image, new_shape=IMG_SIZE, pad_value=114):

@@ -1,3 +1,5 @@
+import os
+
 PT_WEIGHTS = "weights/best.pt"
 ONNX_WEIGHTS = "export/best.onnx"  # relative to repo root; run scripts from there
 
@@ -15,3 +17,6 @@ COLOR_PALETTE = [
     (255, 0, 0), (0, 255, 0), (0, 0, 255),
     (255, 255, 0), (255, 0, 255), (0, 255, 255),
 ]
+
+MAX_SIDE = 960  # uploads are shrunk so their longest side is at most this many pixels
+GALLERY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "gallery")

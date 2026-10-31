@@ -1,0 +1,57 @@
+{
+  "layers": [
+    "L11_MSCA",
+    "L15_C2CA",
+    "L19_C2Triplet",
+    "L23_C2Triplet",
+    "L27_MSCA"
+  ],
+  "frames": {
+    "7-1_Video4_22693": {
+      "classes": {
+        "Ligament": 0.777,
+        "Nerve": 0.864
+      }
+    },
+    "7-1_Video1_22305": {
+      "classes": {
+        "Skeleton": 0.762,
+        "Ligament": 0.912
+      }
+    },
+    "3-1_Video4_18513": {
+      "classes": {
+        "Nerve": 0.639,
+        "IntervertebralDiscHerniation": 0.537
+      }
+    },
+    "6-1_Video3_21962": {
+      "classes": {
+        "Skeleton": 0.88,
+        "Ligament": 0.92
+      }
+    },
+    "1_1_part2_1_Video3_07846": {
+      "classes": {
+        "IntervertebralDisc": 0.855,
+        "IntervertebralDiscHerniation": 0.906
+      }
+    },
+    "9-1_Video5_24349": {
+      "classes": {
+        "IntervertebralDisc": 0.921
+      }
+    },
+    "3-1_Video1_17906": {
+      "classes": {
+        "Ligament": 0.58,
+        "Muscle": 0.615
+      }
+    },
+    "10-1_10_Video2_00057": {
+      "classes": {
+        "Muscle": 0.932
+      }
+    }
+  }
+}
