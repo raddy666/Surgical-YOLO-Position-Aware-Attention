@@ -49,6 +49,34 @@ def load_index():
 INDEX = load_index()
 EXAMPLE_IDS = sorted(INDEX)
 
+MATCH_MAX_DIFF = 2.0  # mean gray-level difference (0-255) under which an upload counts as the same picture
+
+
+def fingerprint(bgr):
+    gray = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
+    return cv2.resize(gray, (64, 36), interpolation=cv2.INTER_AREA).astype(np.float32)
+
+
+def load_fingerprints():
+    prints = {}
+    for frame_id in INDEX:
+        bgr = cv2.imread(os.path.join(GALLERY_DIR, "frames", f"{frame_id}.jpg"))
+        if bgr is not None:
+            prints[frame_id] = fingerprint(bgr)
+    return prints
+
+
+PRINTS = {} if LIVE else load_fingerprints()
+
+
+def match_example(bgr):
+    """Gallery frame id when the upload is the same picture as a gallery frame, else None."""
+    if not PRINTS:
+        return None
+    fp = fingerprint(bgr)
+    frame_id, diff = min(((i, float(np.abs(fp - p).mean())) for i, p in PRINTS.items()), key=lambda t: t[1])
+    return frame_id if diff <= MATCH_MAX_DIFF else None
+
 
 def draw_segmentation(original_bgr, detections):
     overlay = original_bgr.copy()
@@ -107,8 +135,13 @@ def use_example(example_id):
     )
 
 
-def finish_upload():
-    return None, gr.Dropdown(value=None)
+def finish_upload(image):
+    if LIVE or image is None:
+        return None, gr.Dropdown(value=None), gr.skip()
+    example_id = match_example(shrink(cv2.cvtColor(image, cv2.COLOR_RGB2BGR)))
+    if example_id is None:
+        return None, gr.Dropdown(value=None), gr.skip()
+    return example_id, gr.Dropdown(value=example_id), structure_update(sorted(INDEX[example_id]["classes"]))
 
 
 def reset():
@@ -165,7 +198,7 @@ with gr.Blocks(title="Surgical-YOLO: Segmentation + Attention Demo") as demo:
     inp.upload(
         segment, inputs=inp, outputs=[seg_out, class_dd, state_image, state_detections], api_name="segment"
     ).then(
-        finish_upload, outputs=[state_example, example_dd], api_visibility="private"
+        finish_upload, inputs=inp, outputs=[state_example, example_dd, class_dd], api_visibility="private"
     ).then(
         show_gradcam, inputs=grad_inputs, outputs=grad_outputs, api_visibility="private"
     )
