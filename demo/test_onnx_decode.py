@@ -1,7 +1,5 @@
 import cv2
 import numpy as np
-from pathlib import Path
-from torchgen import model
 from ultralytics import YOLO
 from onnx_infer import run_segmentation
 from config import PT_WEIGHTS, CLASS_NAMES

@@ -6,6 +6,7 @@
 ![Status](https://img.shields.io/badge/Result-Statistically%20Validated-brightgreen)
 ![Tests](https://github.com/raddy666/Surgical-YOLO-Position-Aware-Attention/actions/workflows/tests.yml/badge.svg)
 [![Dashboard](https://img.shields.io/badge/Dashboard-Live-success)](https://surgical-yolo-position-aware-attention.streamlit.app/)
+[![Demo](https://img.shields.io/badge/Demo-Live-success)](https://model-demo-mmeo.onrender.com)
 
 📄 [Full undergraduate thesis](paper/thesis_paper.pdf) (background, all derivations, complete figures, full reference list).
 
@@ -77,26 +78,41 @@ All the results above, plus several deeper breakdowns not in this README, are ex
 
 Speed-vs-accuracy trade-off across all 10 Phase 2 configurations, per-structure performance with configurable comparisons, the full Phase 1 position × mechanism screening heatmap, training curves (any metric, any config, mean or per-seed), confusion matrices, effect-size/stability analysis, and dataset class distribution; built with Streamlit + Plotly, source in `dashboard/`.
 
+## Live Demo
+
+Hybrid-L15CA segmentation and Grad-CAM attention, in the browser:
+
+**[model-demo-mmeo.onrender.com](https://model-demo-mmeo.onrender.com)**
+
+Pick an example frame or upload one. Segmentation runs live from the ONNX export through a hand-written ONNX Runtime decode (no Ultralytics postprocessing), checked against the PyTorch checkpoint (mask IoU 0.92 to 0.99 on three sample frames). Grad-CAM needs PyTorch autograd, which an ONNX graph cannot provide, so the free hosted instance (512 MB) serves it precomputed for 8 example frames, while a local install computes it live for any frame. The instance sleeps when idle, so the first request can take close to a minute. Architecture, modes, API tests (Postman), and deployment notes are in [`demo/README.md`](./demo/README.md).
+
+```bash
+python demo/app.py   # after the installation steps below; open http://localhost:7860
+```
+
 ## Data: not included, and why
 
-The dataset is clinical video from a single institution and cannot be shared publicly without institutional/ethics clearance. This repository is code, methodology, and results, not a downloadable dataset. If you want to run the training pipeline yourself, point `scripts/train.py` at your own dataset in the standard YOLO segmentation format (`images/train`, `images/val`, `labels/train`, `labels/val`, plus a `data.yaml`; see `data.yaml` in this repo for the expected schema and class names). You won't reproduce the exact clinical numbers above without the original data, but the full pipeline (architecture, training, statistical evaluation) runs against any correctly formatted segmentation dataset.
+The dataset is clinical video from a single institution and cannot be shared publicly without institutional/ethics clearance. This repository is code, methodology, and results, not a downloadable dataset. If you want to run the training pipeline yourself, point `scripts/train.py` at your own dataset in the standard YOLO segmentation format (`images/train`, `images/val`, `labels/train`, `labels/val`, plus a `data.yaml`; see `data.yaml` in this repo for the expected schema and class names). You won't reproduce the exact clinical numbers above without the original data, but the full pipeline (architecture, training, statistical evaluation) runs against any correctly formatted segmentation dataset. A few example frames are included for illustration and for the live demo (`data/frames/` with labels in `data/labels/`, `demo/gallery/frames/`, and the overlays in `gradcam/`); they are shown with institutional permission, and the dataset itself is still not distributed.
 
 ## Repository structure
 
 ```
 .
-├── modules/attention/     # 9 attention mechanisms + their C2f wrappers: the core original contribution
+├── modules/attention/      # 9 attention mechanisms + their C2f wrappers: the core original contribution
 ├── integration/            # 2 modified Ultralytics files (mirrored paths) + patch instructions
 ├── configs/                # YAML architecture files for baseline + all 10 Phase 2 configurations
 ├── scripts/                # training, validation, data prep, statistical analysis, figure generation, integration patching
-├── tests/                  # attention module + config-build regression tests
+├── tests/                  # attention module + config-build regression tests; Postman collection for the demo API in tests/postman/
 ├── .github/workflows/      # CI: runs the full test suite on every push
-├── dashboard/               # interactive Streamlit + Plotly dashboard (live link above)
+├── dashboard/              # interactive Streamlit + Plotly dashboard (live link above)
 ├── results/                # aggregated per-seed CSVs feeding both this README and the dashboard
 ├── gradcam/                # EigenCAM & Grad-CAM attention visualization, see gradcam/README.md
 ├── export/                 # ONNX + TensorRT export, parity verification, benchmark results, see export/README.md
+├── demo/                   # live Gradio demo (ONNX segmentation + Grad-CAM), hosted on Render, see demo/README.md
+├── weights/                # best.pt, the seed 2 checkpoint used by the export and the demo
 ├── figures/                # the thesis's actual figures (heatmap, convergence curves, efficiency plots)
-├── data.yaml                # schema/class-name reference (paths genericized, no data included)
+├── data/                   # 6 example frames + YOLO-seg labels (not the dataset) used by gradcam/, export/, and demo/
+├── data.yaml               # schema/class-name reference (paths genericized, no data included)
 └── requirements.txt
 ```
 
@@ -150,6 +166,11 @@ and behind the dashboard's data, rather than leaving them unverifiable:
   for the 4 headline configs
 - `scripts/merge_training_curves.py`: merges all per-run `results.csv`
   training logs into one file for the dashboard's Training Diagnostics tab
+- `demo/make_gradcam_gallery.py`: regenerates the precomputed Grad-CAM
+  gallery (example frames, overlays per structure and layer, index) used
+  by the hosted demo
+- `demo/test_onnx_decode.py`: compares the hand-written ONNX decode with
+  the PyTorch checkpoint on one frame (boxes, confidences, mask IoU)
 
 ## What's original here, and what's reused
 
@@ -160,14 +181,14 @@ and behind the dashboard's data, rather than leaving them unverifiable:
 
 ## Limitations
 
-Single institution, single procedure type, single dataset (6,958 frames); findings on position-mechanism preference are dataset-specific, not a general theory of attention placement. Minority classes (Herniation: 434 instances, Muscle: 202) reduce confidence in structure-level conclusions for those classes specifically. Only four mechanism families were carried to full validation; better-suited mechanisms for L11/L27 may exist outside the tested set. Inference speed and parameter counts are specific to the RTX 3060 Laptop GPU used. EigenCAM-based attention visualization (see `gradcam/README.md`) confirms position-dependent behavior qualitatively: the same Triplet Attention mechanism shows anomalously stable, content-independent localization at L19 (concentration 0.94–0.98) versus wide, content-dependent variation at the structurally similar L23 (0.43–0.98), corroborating the position-dependence finding above through an independent method. All three visualized layers also show a content-invariant positional bias toward the fixed camera/timestamp overlay location in training frames; a real caveat for deployment on footage without this exact overlay. Gradient-based Grad-CAM (class-discriminative attribution) is also implemented (see `gradcam/README.md`), cross-verified against `model.predict()`'s reported confidences; ground-truth-overlap scoring shows no clean localization pattern from this small sample (6 frames) beyond what's already documented as illustrative in that file, not treated as a second statistically validated result. ONNX and TensorRT exports (see `export/README.md`) are verified numerically equivalent to the original checkpoint within tolerance; neither export format was faster than native PyTorch inference on this GPU at batch size 1, a result specific to this model's small parameter count and this hardware, not a general property of TensorRT. Not validated in a live surgical deployment environment; all experiments are offline, on pre-recorded frames.
+Single institution, single procedure type, single dataset (6,958 frames); findings on position-mechanism preference are dataset-specific, not a general theory of attention placement. Minority classes (Herniation: 434 instances, Muscle: 202) reduce confidence in structure-level conclusions for those classes specifically. Only four mechanism families were carried to full validation; better-suited mechanisms for L11/L27 may exist outside the tested set. Inference speed and parameter counts are specific to the RTX 3060 Laptop GPU used. EigenCAM-based attention visualization (see `gradcam/README.md`) confirms position-dependent behavior qualitatively: the same Triplet Attention mechanism shows anomalously stable, content-independent localization at L19 (concentration 0.94–0.98) versus wide, content-dependent variation at the structurally similar L23 (0.43–0.98), corroborating the position-dependence finding above through an independent method. All three visualized layers also show a content-invariant positional bias toward the fixed camera/timestamp overlay location in training frames; a real caveat for deployment on footage without this exact overlay. Gradient-based Grad-CAM (class-discriminative attribution) is also implemented (see `gradcam/README.md`), cross-verified against `model.predict()`'s reported confidences; ground-truth-overlap scoring shows no clean localization pattern from this small sample (6 frames) beyond what's already documented as illustrative in that file, not treated as a second statistically validated result. ONNX and TensorRT exports (see `export/README.md`) are verified numerically equivalent to the original checkpoint within tolerance; neither export format was faster than native PyTorch inference on this GPU at batch size 1, a result specific to this model's small parameter count and this hardware, not a general property of TensorRT. The hosted demo runs on a free 512 MB instance, so Grad-CAM there is precomputed for 8 example frames (live Grad-CAM needs a local install with PyTorch, see `demo/README.md`), and the demo is a research prototype, not a medical device. Not validated in a live surgical deployment environment; all experiments are offline, on pre-recorded frames.
 
 ## Roadmap
 
 - [x] Attention visualization (EigenCAM + Grad-CAM): directly addresses the limitation above; see `gradcam/README.md`.
 - [x] ONNX / TensorRT export and inference-speed benchmarking of Hybrid-L15CA; see `export/README.md`.
 - [x] Interactive results dashboard rebuilding the Phase 1 heatmap and per-structure comparisons from the raw seed data
-- [ ] Live inference demo
+- [x] Live inference demo (Gradio, hosted on Render): live ONNX segmentation with a hand-written decode, Grad-CAM live locally and precomputed for example frames on the hosted instance, REST API tests in Postman; see `demo/README.md`.
 - [ ] Manuscript in preparation
 
 ## References

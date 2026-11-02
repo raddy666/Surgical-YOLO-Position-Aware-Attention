@@ -158,8 +158,10 @@ annotated structure; closer to 0 means it's landing elsewhere in the frame
 
 **Important limitation: L27 zero-gradient artifact, not a finding.** L27 shows
 exactly-zero heatmaps for Nerve and IntervertebralDiscHerniation specifically (4 of
-its 11 target/frame combinations), never for the four larger structures. This was
-initially suspected to be a real signal about L27's attention behavior, mirroring the
+its 11 target/frame combinations), never for the four larger structures in this
+sample. In the later demo gallery (`demo/gallery/`, 70 overlays) the same flat L27
+overlays also occur for Skeleton and Ligament, so the pattern is not limited to
+small structures. This was initially suspected to be a real signal about L27's attention behavior, mirroring the
 paper's own L27 null result, but per-channel weight inspection showed the weights
 are exactly `0.000000` in every zero case, not merely negative. This is a structural
 consequence of the simplified single-max-anchor target: the backprop target is the
@@ -243,8 +245,7 @@ limitation above:
 ```bash
 python gradcam/run_eigencam.py
 ```
-Reads frames from `gradcam/frames/`, writes overlays to `gradcam/outputs/`, and
-prints per-layer concentration scores to stdout.
+Reads frames from `data/frames/`, writes overlays to `gradcam/outputs_eigencam/`, and prints per-layer concentration scores to stdout.
 
 **Grad-CAM:**
 ```bash
