@@ -261,8 +261,8 @@ below, each with its checks in the Post-response script. Collection variables:
 | 4 Run segmentation | `POST /gradio_api/call/segment` | Status 200; returns an `event_id` |
 | 5 Get result | `GET /gradio_api/call/segment/{event_id}` | Stream has `event: complete`; `data[0].url` is a string; `data[1].choices` is not empty |
 | N1 Missing data field | Body `{}` | Status 422 |
-| N2 No image | Body `{"data": [null]}` | Call returns 200; the stream completes with a null image and no structures |
-| N3 Non-image file | A text file named `fake.jpg`, uploaded and segmented | Upload returns 200; the stream contains `event: error` while the HTTP status stays 200 |
+| N2a, N2b No image | Body `{"data": [null]}`, then read the result | Call returns 200; the stream completes with a null image and no structures |
+| N3a, N3b, N3c Non-image file | A text file named `fake.jpg`: upload, segment, read the result | Upload returns 200; the stream contains `event: error` while the HTTP status stays 200 |
 | N4 Unknown endpoint | `POST /gradio_api/call/nope` | Status 404 or 500 |
 
 **Running it.**
@@ -272,9 +272,10 @@ below, each with its checks in the Post-response script. Collection variables:
    `http://localhost:7860` or `https://model-demo-mmeo.onrender.com` (no trailing
    slash).
 3. In request 3, select `data/frames/9-1_Video5_24263.jpg` in the form-data body.
-   In N3, select any text file renamed `fake.jpg`.
-4. Send 1, 2, 3, 4, 5, then N1, N2, N3, N4, in that order. Send request 4 again
-   before every request 5.
+   In N3a, select any text file renamed `fake.jpg`.
+4. Send 1 to 5, then N1, N2a, N2b, N3a, N3b, N3c, N4, in that order. When sending
+   by hand, send the call request (4, N2a, or N3b) again before reading its result,
+   because an event ID can be read once.
 
 The main flow was run against the hosted instance and the whole collection passes.
 

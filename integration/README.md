@@ -3,7 +3,7 @@
 This project extends Ultralytics YOLO (`ultralytics==8.3.185`) with 9 custom
 attention mechanisms, following Ultralytics' own documented pattern for adding
 custom modules. That pattern requires two small edits to Ultralytics' own
-source files. This folder contains the already-modified files — copy them
+source files. This folder contains the already-modified files; copy them
 directly into your installed package rather than re-deriving the edits by hand.
 
 ## Steps
@@ -11,7 +11,7 @@ directly into your installed package rather than re-deriving the edits by hand.
 1. Install the exact pinned version:
    pip install ultralytics==8.3.185
 
-2. Run the integration script from the repo root — it does the file
+2. Run the integration script from the repo root; it does the file
    copying below automatically:
    python scripts/apply_integration.py
 
@@ -25,7 +25,7 @@ directly into your installed package rather than re-deriving the edits by hand.
   - integration/nn/tasks.py            -> <install path>/nn/tasks.py
   - modules/attention/__init__.py -> <install path>/nn/modules/__init__.py
 - Copies this repo's modules/attention/*.py files FLAT into <install path>/nn/modules/
-  (not a subfolder — __init__.py above imports from .msca, .eca, .ca, .triplet,
+  (not a subfolder: __init__.py above imports from .msca, .eca, .ca, .triplet,
   .c2cbam, .gc, .simam, .ema, .biformer sitting right next to it)
   
 ## What changed, exactly
@@ -40,6 +40,6 @@ directly into your installed package rather than re-deriving the edits by hand.
 
 tasks.py and modules/__init__.py in this folder are modified copies of
 Ultralytics' own AGPL-3.0-licensed source, included under those terms (AGPL
-header preserved in both). Everything else in this repository — the
+header preserved in both). Everything else in this repository (the
 attention implementations in modules/attention/, training scripts, and
-results — is original work.
+results) is original work.
