@@ -84,7 +84,7 @@ Hybrid-L15CA segmentation and Grad-CAM attention, in the browser:
 
 **[model-demo-mmeo.onrender.com](https://model-demo-mmeo.onrender.com)**
 
-Pick an example frame or upload one. Segmentation runs live from the ONNX export through a hand-written ONNX Runtime decode (no Ultralytics postprocessing), checked against the PyTorch checkpoint (mask IoU 0.92 to 0.99 on three sample frames). Grad-CAM needs PyTorch autograd, which an ONNX graph cannot provide, so the free hosted instance (512 MB) serves it precomputed for 8 example frames, while a local install computes it live for any frame. The instance sleeps when idle, so the first request can take close to a minute. Architecture, modes, API tests (Postman), and deployment notes are in [`demo/README.md`](./demo/README.md).
+Pick an example frame or upload one. Segmentation runs live from the ONNX export through a hand-written ONNX Runtime decode (no Ultralytics postprocessing), checked against the PyTorch checkpoint (mask IoU 0.92 to 0.99 on six sample frames). Grad-CAM needs PyTorch autograd, which an ONNX graph cannot provide, so the free hosted instance (512 MB) serves it precomputed for 8 example frames, while a local install computes it live for any frame. The instance sleeps when idle, so the first request can take close to a minute. Architecture, modes, API tests (Postman), and deployment notes are in [`demo/README.md`](./demo/README.md).
 
 ```bash
 python demo/app.py   # after the installation steps below; open http://localhost:7860

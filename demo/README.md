@@ -58,10 +58,7 @@ The ONNX session runs on the CPU provider with one thread and the memory arena
 disabled, which keeps the footprint small on the hosted instance.
 
 **Verification against `.pt`.** `test_onnx_decode.py` runs both paths on one frame
-and prints boxes, confidences, and the best mask IoU for each detection. On three
-sample frames, boxes agree within about 6 px (1080p frames) and mask IoU is 0.92
-to 0.99. Confidence scores can differ more: on one frame the Intervertebral Disc
-score was 0.546 in ONNX and 0.422 in PyTorch, in line with the floating-point
+and prints boxes, confidences, and the best mask IoU for each detection. On the six example frames (12 detections), box IoU is at least 0.95, with the largest single-edge gap 14.7 px on a large box, and mask IoU is 0.92 to 0.99. Confidence scores can differ more: on one frame the Intervertebral Disc score was 0.546 in ONNX and 0.422 in PyTorch, in line with the floating-point
 differences already noted in `export/README.md`. The first version of the decode
 skipped the final crop to the detection's box and scored 0.09 to 0.54 mask IoU;
 Ultralytics' own mask postprocessing ends with that crop, and adding it closed
