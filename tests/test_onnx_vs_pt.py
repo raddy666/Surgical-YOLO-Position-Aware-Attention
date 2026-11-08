@@ -9,7 +9,6 @@ noted in export/README.md.
 import glob
 import os
 import sys
-
 import cv2
 import numpy as np
 import pytest
