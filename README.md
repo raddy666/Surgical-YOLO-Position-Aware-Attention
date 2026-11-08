@@ -102,7 +102,7 @@ The dataset is clinical video from a single institution and cannot be shared pub
 ├── integration/            # 2 modified Ultralytics files (mirrored paths) + patch instructions
 ├── configs/                # YAML architecture files for baseline + all 10 Phase 2 configurations
 ├── scripts/                # training, validation, data prep, statistical analysis, figure generation, integration patching
-├── tests/                  # attention module + config-build regression tests; Postman collection for the demo API in tests/postman/
+├── tests/                  # attention module, config-build and ONNX-vs-.pt decode regression tests; Postman collection for the demo API in tests/postman/
 ├── .github/workflows/      # CI: runs the full test suite on every push
 ├── dashboard/              # interactive Streamlit + Plotly dashboard (live link above)
 ├── results/                # aggregated per-seed CSVs feeding both this README and the dashboard

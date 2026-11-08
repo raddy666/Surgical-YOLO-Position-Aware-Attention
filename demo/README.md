@@ -62,7 +62,9 @@ and prints boxes, confidences, and the best mask IoU for each detection. On the 
 differences already noted in `export/README.md`. The first version of the decode
 skipped the final crop to the detection's box and scored 0.09 to 0.54 mask IoU;
 Ultralytics' own mask postprocessing ends with that crop, and adding it closed
-the gap.
+the gap. The same comparison runs in CI as `tests/test_onnx_vs_pt.py` on every
+push: for each detection with a score of at least 0.5 it requires a box IoU of
+at least 0.90 and a mask IoU of at least 0.85 against the `.pt` model.
 
 ## Grad-CAM (`gradcam_infer.py`)
 
