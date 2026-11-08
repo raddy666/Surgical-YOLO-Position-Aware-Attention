@@ -1,6 +1,6 @@
 # Surgical-YOLO: Position-Aware Attention for Real-Time Spinal Endoscopic Video Segmentation
 
-![Python](https://img.shields.io/badge/Python-3.10-blue)
+![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.5.1-EE4C2C?logo=pytorch&logoColor=white)
 ![Ultralytics](https://img.shields.io/badge/Ultralytics-YOLO11-purple)
 ![Status](https://img.shields.io/badge/Result-Statistically%20Validated-brightgreen)
@@ -190,7 +190,6 @@ Single institution, single procedure type, single dataset (6,958 frames); findin
 - [x] ONNX / TensorRT export and inference-speed benchmarking of Hybrid-L15CA; see `export/README.md`.
 - [x] Interactive results dashboard rebuilding the Phase 1 heatmap and per-structure comparisons from the raw seed data
 - [x] Live inference demo (Gradio, hosted on Render): live ONNX segmentation with a hand-written decode, Grad-CAM live locally and precomputed for example frames on the hosted instance, REST API tests in Postman; see `demo/README.md`.
-- [ ] Manuscript in preparation
 
 ## References
 
