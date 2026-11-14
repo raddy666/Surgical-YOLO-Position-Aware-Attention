@@ -11,7 +11,7 @@ st.sidebar.title("Surgical-YOLO")
 st.sidebar.markdown(
     "Position-aware attention placement in YOLO11n-seg for real-time spinal "
     "endoscopic video segmentation, statistically validated across 166 "
-    "training runs. Hybrid-L15CA: +2.82% mAP50-95, +18'%' FPS over baseline."
+    "training runs. Hybrid-L15CA: +2.82% mAP50-95, +18% FPS over baseline."
 )
 st.sidebar.markdown("[Full repo & thesis](https://github.com/raddy666/Surgical-YOLO-Position-Aware-Attention)")
 
