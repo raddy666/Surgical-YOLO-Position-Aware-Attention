@@ -25,13 +25,11 @@ def validate_with_seeds(experiment_name, seed_folders, data_yaml):
         model = YOLO(str(weight_path))
         metrics = model.val(data=data_yaml, batch=6, device=0, verbose=False)
         
-        # Extract overall metrics
         result = {
             'seed': seed_idx,
             'mask_map50_95': metrics.seg.map,
         }
         
-        # Extract per-class metrics
         class_names = ['Disc', 'Skeleton', 'Ligament', 'Muscle', 'Nerve', 'Herniation']
         
         for class_idx, class_name in enumerate(class_names):
@@ -86,7 +84,6 @@ def compare_mechanisms(exp_name, exp_df, baseline_name, baseline_df):
     
     structures = ['Disc', 'Skeleton', 'Ligament', 'Muscle', 'Nerve', 'Herniation']
     
-    # Overall mAP comparison
     print("="*80)
     print("OVERALL PERFORMANCE")
     print("="*80)
@@ -97,7 +94,6 @@ def compare_mechanisms(exp_name, exp_df, baseline_name, baseline_df):
     exp_map_std = exp_df['mask_map50_95'].std(ddof=1)
     
     # Paired t-test (comparing matching seeds)
-    # Use first 10 seeds from both
     base_vals = baseline_df['mask_map50_95'].values[:10]
     exp_vals = exp_df['mask_map50_95'].values[:10]
     
@@ -242,7 +238,6 @@ def final_verdict(comparison_results):
     print(f"  Significant improvements: {sig_improvements}/6")
     print(f"  Significant degradations: {sig_degradations}/6")
     
-    # Show which structures improved/degraded
     print(f"\nStructures that IMPROVED:")
     for r in structure_results:
         if r['verdict'] in [' HIGHLY SIG', ' SIGNIFICANT'] and r['delta'] > 0:
@@ -276,7 +271,6 @@ def final_verdict(comparison_results):
         else:
             print(f"   CA shows no significant improvement (p={overall_p:.4f})")
     
-    # Recommendations
     print(f"\n{'='*80}")
     print("RECOMMENDATIONS")
     print(f"{'='*80}\n")
@@ -302,11 +296,7 @@ def final_verdict(comparison_results):
 
 
 def main():
-    # ========================================================================
-    # CONFIGURATION
-    # ========================================================================
     
-    # MSCA Baseline (10 seeds, 100 epochs)
     baseline_folders = [
         "runs/segment/validate_100/yolo11n_seg_MSCA_seed1",
         "runs/segment/validate_100/yolo11n_seg_MSCA_seed2",
@@ -320,7 +310,6 @@ def main():
         "runs/segment/validate_100/yolo11n_seg_MSCA_seed10",
     ]
     
-    # CA (10 seeds, 100 epochs)
     experiment_folders = [
         "runs/segment/hybrid/yolo11n_seg_c2triplet_c2ca_15_seed1",
         "runs/segment/hybrid/yolo11n_seg_c2triplet_c2ca_15_seed2",
@@ -336,35 +325,16 @@ def main():
     
     data_yaml = "data.yaml"
     
-    # ========================================================================
-    # VALIDATE BASELINE
-    # ========================================================================
-    
     baseline_df = validate_with_seeds("MSCA-Baseline", baseline_folders, data_yaml)
     baseline_mean, baseline_std, baseline_cv = check_reliability("MSCA-Baseline", baseline_df)
-    
-    # ========================================================================
-    # VALIDATE MECHANISM
-    # ========================================================================
     
     exp_df = validate_with_seeds("CA", experiment_folders, data_yaml)
     exp_mean, exp_std, exp_cv = check_reliability("CA", exp_df)
     
-    # ========================================================================
-    # COMPARE
-    # ========================================================================
     
     comparison_results = compare_mechanisms("CA", exp_df, "MSCA-Baseline", baseline_df)
     
-    # ========================================================================
-    # FINAL VERDICT
-    # ========================================================================
-    
     final_verdict(comparison_results)
-    
-    # ========================================================================
-    # SAVE RESULTS
-    # ========================================================================
     
     output_file = "CA_vs_MSCA_final_comparison.xlsx"
     
@@ -372,7 +342,6 @@ def main():
         baseline_df.to_excel(writer, sheet_name='MSCA_Baseline', index=False)
         exp_df.to_excel(writer, sheet_name='CA', index=False)
         
-        # Summary
         summary_data = {
             'Metric': ['Overall Δ mAP%', 'p-value', "Cohen's d", 'Verdict'],
             'Value': [
@@ -385,7 +354,6 @@ def main():
         summary_df = pd.DataFrame(summary_data)
         summary_df.to_excel(writer, sheet_name='Summary', index=False)
         
-        # Structure comparison
         structure_df = pd.DataFrame(comparison_results['structure_results'])
         structure_df.to_excel(writer, sheet_name='Structure_Comparison', index=False)
     

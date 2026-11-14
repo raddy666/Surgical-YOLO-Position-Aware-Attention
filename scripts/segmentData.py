@@ -5,11 +5,8 @@ import random
 from pathlib import Path
 
 # Basic settings
-source_dir = 'data/'
-###################################
-#Target directory for YOLO dataset#
-###################################
-target_root_dir = 'E:/research/train_YOLO/'  
+source_dir = 'data/' 
+target_root_dir = 'datasets/yolo/' # where the converted YOLO dataset is written; edit for your machine
 W, H = 1920, 1080  # Image dimensions
 
 # Category mapping
@@ -68,7 +65,6 @@ def normalize_label(label):
     import re
     
     # Step 1: Handle mixed spaces inside and outside parentheses
-    # Handle spaces before and after parentheses: 'IntervertebralDisc (FibrousRing)' -> 'IntervertebralDisc(FibrousRing)'
     label = re.sub(r'\s*（\s*', '（', label)
     label = re.sub(r'\s*）\s*', '）', label)
     label = re.sub(r'\s*\(\s*', '(', label)
@@ -127,10 +123,8 @@ names: {list(categories.values())}  # class names
         f.write(yaml_content)
     print(f"Dataset configuration file generated: {yaml_path}")
 
-# Create normalized category_mapping
 normalized_category_mapping = {normalize_label(k): v for k, v in category_mapping.items()}
 
-# Create directory structure
 def create_directories():
     """Create necessary directory structure"""
     for split in ['train', 'val']:
@@ -169,25 +163,20 @@ def process_single_file(json_path, img_path, filename, train_counts, val_counts)
     """Function to process a single file"""
     split = get_split(filename)
     
-    # Set target paths
     target_img_path = os.path.join(target_root_dir, f'images/{split}/{filename.replace(".json", ".jpg")}')
     target_label_path = os.path.join(target_root_dir, f'labels/{split}/{filename.replace(".json", ".txt")}')
     
-    # Check if file has been processed
     if os.path.exists(target_img_path) and os.path.exists(target_label_path):
         return None
     
-    # Copy image
     shutil.copy(img_path, target_img_path)
     
-    # Process annotation file
     with open(json_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
     
     category_counts = {'train': train_counts, 'val': val_counts}
     valid_annotations = 0
     
-    # Write YOLO format labels
     with open(target_label_path, 'w') as f:
         for shape in data['shapes']:
             label = normalize_label(shape['label'])
@@ -196,14 +185,12 @@ def process_single_file(json_path, img_path, filename, train_counts, val_counts)
                 if major_category in categories:
                     points = shape['points']
                     
-                    # Validate polygon validity
                     if not validate_polygon(points):
                         print(f"Warning: Label '{label}' in {filename} has fewer than 3 polygon points, skipped")
                         continue
                     
                     class_id = id_mapping[categories[major_category]]
                     
-                    # Validate and normalize coordinates
                     normalized_points = []
                     valid_polygon = True
                     
@@ -211,7 +198,6 @@ def process_single_file(json_path, img_path, filename, train_counts, val_counts)
                         x_norm = x / W
                         y_norm = y / H
                         
-                        # Validate coordinate range
                         if not validate_coordinates(x_norm, y_norm):
                             print(f"Warning: Label '{label}' in {filename} has coordinates out of range ({x_norm:.6f}, {y_norm:.6f}), skipped")
                             valid_polygon = False
@@ -220,20 +206,17 @@ def process_single_file(json_path, img_path, filename, train_counts, val_counts)
                         normalized_points.extend([x_norm, y_norm])
                     
                     if valid_polygon:
-                        # Update category count
                         category_counts[split][categories[major_category]] += 1
                         valid_annotations += 1
                         
-                        # Write YOLO format annotation
                         f.write(f"{class_id}")
                         for i in range(0, len(normalized_points), 2):
                             f.write(f" {normalized_points[i]:.6f} {normalized_points[i+1]:.6f}")
                         f.write("\n")
     
-    # If no valid annotations, create empty file
     if valid_annotations == 0:
         with open(target_label_path, 'w') as f:
-            pass  # Create empty file
+            pass  
     
     return split
 

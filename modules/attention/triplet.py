@@ -24,7 +24,7 @@ class ZPool(nn.Module):
 class TripletAttention(nn.Module):
     """
     Triplet Attention
-    Paper: Rotate to Attend — Triplet Attention Module
+    Paper: Rotate to Attend: Convolutional Triplet Attention Module
     """
     def __init__(self, no_spatial=False):
         super().__init__()

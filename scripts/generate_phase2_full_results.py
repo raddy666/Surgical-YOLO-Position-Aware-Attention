@@ -7,7 +7,6 @@ BASE_DIR = "runs/segment"
 DATA_YAML = "data.yaml"
 CLASS_NAMES = ['IntervertebralDisc', 'Skeleton', 'Ligament', 'Muscle', 'Nerve', 'IntervertebralDiscHerniation']
 
-# same 10 configs as collect_result.py's CONFIGS dict — copy it in directly
 CONFIGS = {
     "Baseline": [f"{BASE_DIR}/validate_100/yolo11n_seg_MSCA_seed{i}" for i in range(1, 11)],
     "L19-Triplet": [f"{BASE_DIR}/validate_100/yolo11n_seg_L19_c2triplet_seed{i}" for i in range(1, 11)],
@@ -47,7 +46,7 @@ def main():
                 "postprocess_ms": metrics.speed["postprocess"],
             })
 
-            if seed_idx == 1:  # params/GFLOPs identical across seeds — one measurement per config is enough
+            if seed_idx == 1: 
                 params = sum(p.numel() for p in model.model.parameters())
                 try:
                     gflops = get_flops(model.model)

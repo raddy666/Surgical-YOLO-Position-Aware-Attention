@@ -21,7 +21,7 @@ TARGETS = [
 
 def run_val_and_time(weights_path, label):
     print(f"\n=== yolo val: {label} ===")
-    model = YOLO(weights_path, task="segment")  # exported formats drop task metadata -- force it
+    model = YOLO(weights_path, task="segment") 
     results = model.val(data=DATA_YAML, imgsz=IMG_SIZE, verbose=False)
 
     box_map = results.box.map
@@ -83,7 +83,7 @@ def compare_sample_frame(pt_weights, other_weights, frame_path, label):
 
     pt_boxes, other_boxes = pt_result.boxes, other_result.boxes
     if pt_boxes is None or other_boxes is None or len(pt_boxes) == 0 or len(other_boxes) == 0:
-        print("  One of the two produced no detections on this frame -- pick a different sample.")
+        print("  One of the two produced no detections on this frame; pick a different sample.")
         return
 
     pt_xyxy, pt_cls, pt_conf = pt_boxes.xyxy.cpu().numpy(), pt_boxes.cls.cpu().numpy().astype(int), pt_boxes.conf.cpu().numpy()

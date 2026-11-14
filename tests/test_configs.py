@@ -21,7 +21,7 @@ def test_config_builds_and_param_count_matches(yaml_path, expected_m):
 
 @pytest.mark.parametrize("yaml_path,expected_m", CONFIGS)
 def test_full_forward_pass_at_inference_resolution(yaml_path, expected_m):
-    """Full end-to-end forward pass at 640x640 — catches integration issues
+    """Full end-to-end forward pass at 640x640; catches integration issues
     a parameter count alone won't (e.g. shape mismatches between an
     attention block's output and the next layer's expected input)."""
     model = YOLO(yaml_path)

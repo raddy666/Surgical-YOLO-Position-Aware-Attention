@@ -49,12 +49,11 @@ import numpy as np
 import random
 
 def set_seed(seed):
-    """Set all random seeds for reproducibility"""
+    """Setting all random seeds for reproducibility"""
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
     np.random.seed(seed)
     random.seed(seed)
-    # Make cudnn deterministic (slower but reproducible)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 

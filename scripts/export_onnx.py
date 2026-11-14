@@ -15,10 +15,10 @@ def main():
     onnx_path = model.export(
         format="onnx",
         imgsz=IMG_SIZE,
-        dynamic=False,   # fixed input shape -- matches the rest of this repo
-        simplify=True,   # runs onnx-simplifier: folds constant subgraphs, smaller/faster graph
-        opset=12,        # broadly compatible with onnxruntime-gpu and most deployment targets
-        half=False,      # FP32 export, keeps the parity check clean; FP16 is a separate later step
+        dynamic=False,   
+        simplify=True, 
+        opset=12,     
+        half=False,     
     )
 
     print(f"\nExported to: {onnx_path}")

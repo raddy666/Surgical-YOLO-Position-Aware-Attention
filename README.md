@@ -43,7 +43,8 @@ Intraoperative perception in minimally invasive spinal surgery means tracking mu
 | Full CA (all 5 positions) | 0.5920 | +2.94% | 1.13% | 219.8 | 3.268M | 10.3 |
 | **Hybrid-L15CA** (3/5 positions modified) | **0.5913** | **+2.82%** | **0.99%** | **191.6** | **3.547M** | **10.6** |
 
-Hybrid-L15CA reaches 95.9% of Full CA's raw mAP (a 0.0007-point gap, well inside measurement noise) while modifying only 3 of 5 positions, carrying a larger Cohen's d (+3.278 vs. +3.093), lower training variance, and a substantially larger gain on the clinically critical Herniation class. Efficiency per modified position (mAP gain ÷ number of positions changed) makes this explicit: Hybrid-L15CA achieves 0.94% per position, against 0.56% (Full Triplet) and 0.59% (Full CA); targeted placement outperforms uniform deployment on a per-modification basis.
+FPS comes from a single benchmark run on one local machine (per-image preprocess, inference and postprocess time), so treat it as indicative. Other benchmark runs in `results/` give different absolute values.
+Hybrid-L15CA reaches 95.9% of Full CA's mAP gain over the baseline (a 0.0007-point gap in raw mAP, well inside measurement noise) while modifying only 3 of 5 positions, carrying a larger Cohen's d (+3.278 vs. +3.093), lower training variance, and a substantially larger gain on the clinically critical Herniation class. Efficiency per modified position (mAP gain ÷ number of positions changed) makes this explicit: Hybrid-L15CA achieves 0.94% per position, against 0.56% (Full Triplet) and 0.59% (Full CA); targeted placement outperforms uniform deployment on a per-modification basis.
 
 **Position-level validation** (single-position Triplet ablations, the core hypothesis test):
 
@@ -100,7 +101,7 @@ The dataset is clinical video from a single institution and cannot be shared pub
 .
 ├── modules/attention/      # 9 attention mechanisms + their C2f wrappers: the core original contribution
 ├── integration/            # 2 modified Ultralytics files (mirrored paths) + patch instructions
-├── configs/                # YAML architecture files for baseline + all 10 Phase 2 configurations
+├── configs/                # YAML architecture files: the 10 Phase 2 configurations (including the baseline) and the Phase 1 variants
 ├── scripts/                # training, validation, data prep, statistical analysis, figure generation, integration patching
 ├── tests/                  # attention module, config-build and ONNX-vs-.pt decode regression tests; Postman collection for the demo API in tests/postman/
 ├── .github/workflows/      # CI: runs the full test suite on every push
@@ -142,7 +143,7 @@ python modules/attention/triplet.py
 To confirm the full integration (not just isolated modules), build the actual architectures and check parameter counts match the numbers above:
 ```python
 from ultralytics import YOLO
-model = YOLO("configs/yolo11n-seg.yaml")
+model = YOLO("configs/yolo11n-seg-c2msca.yaml")
 model.info()  # should show ~3.636M parameters
 ```
 All of this is automated in `tests/` and runs on every push via GitHub Actions:
@@ -201,6 +202,10 @@ Single institution, single procedure type, single dataset (6,958 frames); findin
 6. Yang, L. et al., SimAM: A Simple, Parameter-Free Attention Module, ICML 2021.
 
 Full reference list (11 citations) in the thesis PDF, `paper/`.
+
+## License
+
+Released under the GNU Affero General Public License v3.0 (see [`LICENSE`](./LICENSE)). The configs, the `integration/` files and parts of `modules/attention/` are adapted from Ultralytics, which is AGPL-3.0 licensed. The clinical example frames and overlays (`data/`, `demo/gallery/`, `gradcam/`) are shown with institutional permission and are not covered by this license.
 
 ## Author
 
