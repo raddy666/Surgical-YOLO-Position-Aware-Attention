@@ -21,7 +21,7 @@ CONFIGS = {
 }
 
 def main():
-    per_class_rows, speed_rows, complexity_rows = [], [], []
+    per_class_rows, complexity_rows = [], []
 
     for config_name, folders in CONFIGS.items():
         for seed_idx, folder in enumerate(folders, start=1):
@@ -39,13 +39,6 @@ def main():
                     "class_name": CLASS_NAMES[class_num], "map50_95": seg.maps[idx],
                 })
 
-            speed_rows.append({
-                "config": config_name, "seed": seed_idx,
-                "preprocess_ms": metrics.speed["preprocess"],
-                "inference_ms": metrics.speed["inference"],
-                "postprocess_ms": metrics.speed["postprocess"],
-            })
-
             if seed_idx == 1: 
                 params = sum(p.numel() for p in model.model.parameters())
                 try:
@@ -56,14 +49,8 @@ def main():
 
     pd.DataFrame(per_class_rows).to_csv("results/phase2_per_class_all10.csv", index=False)
 
-    speed_df = pd.DataFrame(speed_rows)
-    speed_df["total_ms"] = speed_df["preprocess_ms"] + speed_df["inference_ms"] + speed_df["postprocess_ms"]
-    speed_df["fps"] = 1000 / speed_df["total_ms"]
-    speed_summary = speed_df.groupby("config")[["preprocess_ms","inference_ms","postprocess_ms","total_ms","fps"]].mean().reset_index()
-    speed_summary.to_csv("results/inference_speed_all10.csv", index=False)
-
     pd.DataFrame(complexity_rows).to_csv("results/model_complexity_all10.csv", index=False)
-    print("Saved: phase2_per_class_all10.csv, inference_speed_all10.csv, model_complexity_all10.csv")
+    print("Saved: phase2_per_class_all10.csv, model_complexity_all10.csv")
 
 if __name__ == "__main__":
     main()

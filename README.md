@@ -14,7 +14,7 @@
 
 Attention-augmented YOLO segmentation models almost always deploy one attention mechanism uniformly across every level of the feature pyramid, assuming every position benefits equally. This project tests that assumption directly: does attention effectiveness actually depend on *where* in the pyramid it's placed?
 
-Across a systematic two-phase study (66 exploratory runs, then 100 fully statistically validated runs: 10 seeds × 10 configurations, 100 epochs each) on a real spinal endoscopy dataset, the answer is yes. **Triplet Attention significantly improves the two segmentation-head-adjacent layers (L19: +0.96%, p=0.021; L23: +1.36%, p=0.001) but provides no significant benefit at the low-resolution semantic layer (L27: +0.11%, p=0.831).** Built on that finding, the resulting position-aware configuration, **Hybrid-L15CA** (Coordinate Attention at the FPN fusion layer, Triplet Attention at the two segmentation-head layers, the MSCA baseline retained elsewhere), reaches **mAP50-95 = 0.5913 (+2.82% over baseline)**, statistically significant improvement on 5 of 6 anatomical structures, and **191.6 FPS (18% faster than the baseline)**, while modifying only 3 of the 5 attention positions.
+Across a systematic two-phase study (66 exploratory runs, then 100 fully statistically validated runs: 10 seeds × 10 configurations, 100 epochs each) on a real spinal endoscopy dataset, the answer is yes. **Triplet Attention significantly improves the two segmentation-head-adjacent layers (L19: +0.96%, p=0.021; L23: +1.36%, p=0.001) but provides no significant benefit at the low-resolution semantic layer (L27: +0.11%, p=0.831).** Built on that finding, the resulting position-aware configuration, **Hybrid-L15CA** (Coordinate Attention at the FPN fusion layer, Triplet Attention at the two segmentation-head layers, the MSCA baseline retained elsewhere), reaches **mAP50-95 = 0.5913 (+2.82% over baseline)**, statistically significant improvement on 5 of 6 anatomical structures, , with **2.5% fewer parameters** and a faster forward pass (about 7%, see the benchmark note below the table), while modifying only 3 of the 5 attention positions.
 
 ## Why this matters clinically
 
@@ -38,12 +38,12 @@ Intraoperative perception in minimally invasive spinal surgery means tracking mu
 
 | Configuration | mAP50-95 | Δ vs. baseline | CV | FPS | Params | GFLOPs |
 |---|---|---|---|---|---|---|
-| Baseline (MSCA, all 5 positions) | 0.5751 ± 0.0038 | N/A | 0.66% | 161.8 | 3.636M | 11.0 |
-| Full Triplet (all 5 positions) | 0.5911 | +2.78% | N/A | 213.7 | 3.259M | 10.3 |
-| Full CA (all 5 positions) | 0.5920 | +2.94% | 1.13% | 219.8 | 3.268M | 10.3 |
-| **Hybrid-L15CA** (3/5 positions modified) | **0.5913** | **+2.82%** | **0.99%** | **191.6** | **3.547M** | **10.6** |
+| Baseline (MSCA, all 5 positions) | 0.5751 ± 0.0038 | N/A | 0.66% | 153.6 | 3.636M | 11.0 |
+| Full Triplet (all 5 positions) | 0.5911 | +2.78% | N/A | 172.9 | 3.259M | 10.3 |
+| Full CA (all 5 positions) | 0.5920 | +2.94% | 1.13% | 164.8 | 3.268M | 10.3 |
+| **Hybrid-L15CA** (3/5 positions modified) | **0.5913** | **+2.82%** | **0.99%** | **159.4** | **3.547M** | **10.6** |
 
-FPS comes from a single benchmark run on one local machine (per-image preprocess, inference and postprocess time), so treat it as indicative. Other benchmark runs in `results/` give different absolute values.
+FPS is the median of 5 interleaved benchmark rounds (`scripts/benchmark_speed.py`: seed 1, batch 6, per-image preprocess, inference and postprocess time) on one RTX 3060 Laptop GPU. Speed drifted by about 10% between rounds, so treat it as indicative. Compared with the baseline, the forward pass of Hybrid-L15CA was about 7% faster (faster in 4 of 5 paired rounds); Full Triplet was about 14% and Full CA about 12% faster. Earlier single-run measurements showed a larger gap and were not reproduced here; every measurement is in `results/inference_speed_runs.csv`.
 Hybrid-L15CA reaches 95.9% of Full CA's mAP gain over the baseline (a 0.0007-point gap in raw mAP, well inside measurement noise) while modifying only 3 of 5 positions, carrying a larger Cohen's d (+3.278 vs. +3.093), lower training variance, and a substantially larger gain on the clinically critical Herniation class. Efficiency per modified position (mAP gain ÷ number of positions changed) makes this explicit: Hybrid-L15CA achieves 0.94% per position, against 0.56% (Full Triplet) and 0.59% (Full CA); targeted placement outperforms uniform deployment on a per-modification basis.
 
 **Position-level validation** (single-position Triplet ablations, the core hypothesis test):
@@ -162,8 +162,10 @@ and behind the dashboard's data, rather than leaving them unverifiable:
   extracts the best-performing seed's checkpoint
 - `scripts/compare_checkpoint_params.py`: params/GFLOPs check for any
   trained checkpoint, given a path
-- `scripts/generate_phase2_full_results.py`: per-class mAP, inference
-  speed, and complexity for all 10 Phase 2 configurations
+- `scripts/generate_phase2_full_results.py`: per-class mAP and complexity
+  for all 10 Phase 2 configurations
+- `scripts/benchmark_speed.py`: inference speed of the 10 Phase 2
+  configurations (warm-up, 5 interleaved rounds, medians)
 - `scripts/generate_confusion_matrices.py`: normalized confusion matrices
   for the 4 headline configs
 - `scripts/merge_training_curves.py`: merges all per-run `results.csv`

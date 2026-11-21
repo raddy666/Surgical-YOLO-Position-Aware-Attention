@@ -82,8 +82,7 @@ floating-point variation between backends: mean 0.062-0.064, max
 ## Benchmark results
 
 Measured via `yolo val`'s own per-image timing breakdown (preprocess +
-inference + postprocess), matching the methodology already used for the
-FPS figures in the main README. All on the same RTX 3060 Laptop GPU,
+inference + postprocess), using the same \yolo val` timing as the FPS figures/in the main README (which use batch size 6 and a median over 5 rounds).` All on the same RTX 3060 Laptop GPU,
 batch size 1, image size 640:
 
 | Format | Inference | Total pipeline | FPS (total pipeline) |

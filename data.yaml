@@ -1,5 +1,5 @@
 # YOLO Dataset Configuration
-path: E:/research/train_YOLO/
+path: E:/thesis/train_YOLO/train_YOLO
 train: images/train
 val: images/val
 

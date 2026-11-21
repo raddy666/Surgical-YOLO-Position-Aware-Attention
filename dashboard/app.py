@@ -11,7 +11,7 @@ st.sidebar.title("Surgical-YOLO")
 st.sidebar.markdown(
     "Position-aware attention placement in YOLO11n-seg for real-time spinal "
     "endoscopic video segmentation, statistically validated across 166 "
-    "training runs. Hybrid-L15CA: +2.82% mAP50-95, +18% FPS over baseline."
+    "training runs. Hybrid-L15CA: +2.82% mAP50-95 with 2.5% fewer parameters than the baseline."
 )
 st.sidebar.markdown("[Full repo & thesis](https://github.com/raddy666/Surgical-YOLO-Position-Aware-Attention)")
 
@@ -33,7 +33,7 @@ with tab1:
     )
     fig1.update_traces(textposition="top center", marker=dict(size=12))
     st.plotly_chart(fig1, width='stretch')
-    st.caption("FPS comes from a single local benchmark run and varies between runs.")
+    st.caption("FPS is the median of 5 interleaved benchmark rounds on one laptop GPU and varies by about 10% between rounds.")
 
 with tab2:
     st.subheader("Per-Structure mAP50-95")
