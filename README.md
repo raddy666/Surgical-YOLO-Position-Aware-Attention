@@ -111,7 +111,7 @@ The dataset is clinical video from a single institution and cannot be shared pub
 ├── export/                 # ONNX + TensorRT export, parity verification, benchmark results, see export/README.md
 ├── demo/                   # live Gradio demo (ONNX segmentation + Grad-CAM), hosted on Render, see demo/README.md
 ├── weights/                # best.pt, the seed 2 checkpoint used by the export and the demo
-├── figures/                # the thesis's actual figures (heatmap, convergence curves, efficiency plots)
+├── figures/                # the thesis's figures (see figures/README.md for the file-to-figure mapping).
 ├── paper/                  # full undergraduate thesis (PDF), linked at the top
 ├── data/                   # 6 example frames + YOLO-seg labels (not the dataset) used by gradcam/, export/, and demo/
 ├── data.yaml               # schema/class-name reference (paths genericized, no data included)
